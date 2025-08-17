@@ -1,0 +1,136 @@
+:root {
+  --bg: #0b0d10;
+  --panel: #12161b;
+  --card: #161b22;
+  --text: #dfe7ef;
+  --muted: #9aa6b2;
+  --accent: #22c55e;
+  --accent-weak: rgba(34,197,94,.15);
+  --border: #242c36;
+  --shadow: 0 12px 30px rgba(0,0,0,.35);
+}
+
+html[data-theme="light"] {
+  --bg: #f6f8fb;
+  --panel: #ffffff;
+  --card: #ffffff;
+  --text: #0f172a;
+  --muted: #5b6573;
+  --accent: #2563eb;
+  --accent-weak: rgba(37,99,235,.1);
+  --border: #e5e7eb;
+  --shadow: 0 10px 24px rgba(15,23,42,.08);
+}
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  background: radial-gradient(1200px 700px at 10% -10%, var(--accent-weak), transparent 50%), var(--bg);
+  color: var(--text);
+}
+
+a { color: inherit; text-decoration: none; }
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  backdrop-filter: saturate(160%) blur(8px);
+  background: color-mix(in srgb, var(--panel) 90%, transparent);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  display:flex; align-items:center; gap:16px;
+  max-width: 1100px; margin: 0 auto; padding: 10px 16px;
+}
+.brand {
+  font-weight: 700; letter-spacing:.3px;
+  display:flex; align-items:center; gap:10px;
+}
+.badge {
+  font-size: 12px; padding: 2px 8px; border-radius: 999px;
+  background: var(--accent-weak); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+}
+.nav-links { margin-left: auto; display:flex; gap:12px; }
+.nav-links a {
+  padding: 8px 10px; border-radius: 8px; color: var(--muted);
+}
+.nav-links a[aria-current="page"], .nav-links a:hover { background: var(--card); color: var(--text); }
+
+.toggle {
+  margin-left: 6px; display:inline-flex; align-items:center; gap:8px;
+  border: 1px solid var(--border); padding: 6px 10px; border-radius: 999px;
+  cursor: pointer; user-select: none; background: var(--panel);
+}
+
+.row { display:flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.input, .select, .btn {
+  padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border);
+  background: var(--panel); color: var(--text);
+}
+.btn { cursor: pointer; }
+.btn.primary { background: var(--accent); color: white; border-color: transparent; }
+.btn.ghost { background: var(--card); }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+
+.section { padding: 16px; margin: 16px 0; }
+
+.grid-2 {
+  display:grid; grid-template-columns: 1fr; gap: 16px;
+}
+@media (min-width: 900px) {
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+}
+
+.header {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom: 10px;
+}
+
+.kpi-row {
+  display:flex; gap:10px; flex-wrap: wrap; margin-top: 12px;
+}
+.kpi {
+  display:flex; align-items:center; gap:10px;
+  padding: 10px 12px; border-radius: 12px; background: var(--panel); border: 1px solid var(--border);
+  transform: translateZ(0);
+  animation: pop-in .4s ease both;
+}
+@keyframes pop-in { from {opacity:0; transform: translateY(3px)} to {opacity:1; transform: translateY(0)} }
+
+.scroll-x {
+  display:flex; gap:12px; overflow:auto; padding-bottom: 6px;
+  scroll-snap-type: x mandatory;
+}
+.forecast-card {
+  min-width: 180px; scroll-snap-align: start;
+  padding: 12px; border-radius: 14px; border: 1px solid var(--border);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--card) 90%, transparent), var(--card));
+}
+
+.skeleton {
+  position: relative; overflow:hidden; background: color-mix(in srgb, var(--card) 70%, #fff 0%);
+  border: 1px dashed var(--border);
+}
+.skeleton::after {
+  content:""; position:absolute; inset:0;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, #fff 6%, var(--panel)), transparent);
+  transform: translateX(-100%); animation: shimmer 1.8s infinite;
+}
+@keyframes shimmer { to { transform: translateX(100%) } }
+
+.mono { font-variant-numeric: tabular-nums; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.muted { color: var(--muted); }
+.center { display:flex; align-items:center; justify-content:center; }
