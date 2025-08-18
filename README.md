@@ -2,6 +2,8 @@
 # <img src="frontend/public/favicon.svg" alt="Favicon" width="30"/> **PM ACCELERATOR - WEATHER APP**
 
 ---
+**App is live at:** https://pm-accelerator-weather-app-ram.netlify.app
+---
 
 ## **Problem Statement - Technical Assignment**
 
