@@ -1,3 +1,0 @@
-id,location_name,latitude,longitude,start_date,end_date,temperature,humidity,recorded_at,created_at,updated_at
-5,Hyderabad,17.385,78.4867,2025-08-15,2025-08-15,32.5,60.2,2025-08-15T14:30:00,2025-08-16T19:02:43,
-4,Hyderabad,17.385,78.4867,2025-08-16,2025-08-16,33.1,58.0,2025-08-16T14:30:00,2025-08-16T07:21:28,2025-08-16T07:23:31
