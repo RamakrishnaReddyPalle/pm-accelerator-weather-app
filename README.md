@@ -1,5 +1,5 @@
 
-# ![Favicon](assets/favicon.svg) **PM ACCELERATOR - WEATHER APP**
+# <img src="frontend/public/favicon.svg" alt="Favicon" width="30"/> **PM ACCELERATOR - WEATHER APP**
 
 ---
 
