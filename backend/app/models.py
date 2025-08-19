@@ -15,16 +15,16 @@ class WeatherHistory(Base):
     latitude: Mapped[float | None] = mapped_column(Float, nullable=True)
     longitude: Mapped[float | None] = mapped_column(Float, nullable=True)
 
-    # Date range persistence (Phase 2)
+    # Date range persistence
     start_date: Mapped[Date | None] = mapped_column(Date, nullable=True)
     end_date: Mapped[Date | None] = mapped_column(Date, nullable=True)
 
-    # NEW in Phase 2: direct reading fields to align with schemas.py
+    # direct reading fields to align with schemas.py
     temperature: Mapped[float | None] = mapped_column(Float, nullable=True)
     humidity: Mapped[float | None] = mapped_column(Float, nullable=True)
     recorded_at: Mapped[DateTime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
-    # Optional raw payload from OpenWeather
+    # raw payload from OpenWeather
     weather_data: Mapped[dict | None] = mapped_column(JSON, nullable=True)
 
     # Timestamps
