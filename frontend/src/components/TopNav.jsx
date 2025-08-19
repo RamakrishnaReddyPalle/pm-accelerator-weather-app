@@ -8,13 +8,12 @@ export default function TopNav() {
   const [open, setOpen] = useState(false)
   const location = useLocation()
 
-  // Apply theme
+  // theme
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
     localStorage.setItem('theme', theme)
   }, [theme])
 
-  // Close mobile menu on route change
   useEffect(() => { setOpen(false) }, [location.pathname])
 
   // Close on ESC
