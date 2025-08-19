@@ -82,6 +82,7 @@ export default function Home() {
 
     try {
       const c = await getCurrentWeather(payload)
+      const f = await getForecast({ ...payload, days: payload.days ?? 5 })
   
       try {
         const name = c?.location?.name || payload.query || 'Unknown'
