@@ -11,7 +11,7 @@ _ALLOWED_FIELDS = {
 }
 
 def _filtered_kwargs(kwargs: dict) -> dict:
-    # keep only allowed keys
+    # keeps only allowed keys
     return {k: v for k, v in kwargs.items() if k in _ALLOWED_FIELDS}
 
 # Create
