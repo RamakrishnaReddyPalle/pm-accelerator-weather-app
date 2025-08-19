@@ -1,14 +1,20 @@
+// frontend/src/api/axios.js
+
 import axios from 'axios'
 
-const RAW = import.meta.env.VITE_API_BASE || ''
-// strip trailing slashes so we don't end up with `//` in URLs
-export const API_BASE = RAW.replace(/\/+$/, '') || 'http://localhost:8000'
-
-console.log('[axios] baseURL =', API_BASE) // <-- optional: remove after verifying
+export const API_BASE =
+  import.meta.env.VITE_API_BASE ||
+  'http://localhost:8000'
 
 const api = axios.create({
   baseURL: API_BASE,
-  timeout: 20000,
+  timeout: 30000,
 })
+
+if (typeof window !== 'undefined') {
+  // helpful in Netlify devtools
+  // eslint-disable-next-line no-console
+  console.log('[axios] baseURL =', API_BASE)
+}
 
 export default api
