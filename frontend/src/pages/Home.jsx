@@ -15,39 +15,30 @@ import { useLastSearchStore } from '../store/lastSearch.js'
 
 const BACKEND = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000'
 
-// Faster defaults: fewer tiles to render, loads quicker
 const MAP_W = 640
 const MAP_H = 400
 const MAP_ZOOM = 13
 
 export default function Home() {
-  // global store (persists via localStorage)
   const { current, forecast, map, videos, setAll, hydrateFromLS, saveToLS } = useLastSearchStore()
-  // local UI flags
   const [savingPaused, setSavingPaused] = useState(false)
   const [historicalMode, setHistoricalMode] = useState(false)
   const location = useLocation()
 
-  // hydrate store on first mount
   useEffect(() => {
     hydrateFromLS()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // re-save to localStorage whenever data changes (unless paused)
   useEffect(() => {
     if (!savingPaused) saveToLS()
   }, [current, forecast, map, videos, savingPaused, saveToLS])
 
-  // when navigating back from History (no state), show last saved
   useEffect(() => {
     if (!location.state?.historyRecord) {
       setHistoricalMode(false)
-      // store already has last values; nothing else to do
     }
   }, [location.pathname, location.state])
 
-  // build "current" from a DB record when coming from History
   const buildCurrentFromRecord = (r) => ({
     source: 'history',
     location: { name: r.location_name, lat: r.latitude, lon: r.longitude },
@@ -57,7 +48,6 @@ export default function Home() {
     }
   })
 
-  // if navigated with a record, render that snapshot (don’t overwrite store)
   useEffect(() => {
     const rec = location.state?.historyRecord
     if (!rec) return
@@ -80,14 +70,11 @@ export default function Home() {
         } catch {}
       }
 
-      // do NOT update store; show snapshot only
       setAll({ current: c, forecast: null, map: mapObj, videos: vids })
     }
     prime()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state])
 
-  // normal search flow updates the store (and persists)
   const doSearch = async (payload) => {
     setSavingPaused(true)
     setHistoricalMode(false)
@@ -95,9 +82,7 @@ export default function Home() {
 
     try {
       const c = await getCurrentWeather(payload)
-      const f = await getForecast({ ...payload, days: payload.days ?? 5 })
-
-      // best-effort DB save
+  
       try {
         const name = c?.location?.name || payload.query || 'Unknown'
         const lat = c?.location?.lat
