@@ -1,3 +1,5 @@
+// frontend/src/pages/Home.jsx
+
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import SearchBar from '../components/SearchBar.jsx'
@@ -13,7 +15,11 @@ import { createHistory } from '../api/history.js'
 import { useLastSearchStore } from '../store/lastSearch.js'
 
 const BACKEND = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000'
-const MAP_W = 800, MAP_H = 500
+
+// Faster defaults: fewer tiles to render, loads quicker
+const MAP_W = 640
+const MAP_H = 400
+const MAP_ZOOM = 13
 
 export default function Home() {
   // global store (persists via localStorage)
@@ -62,9 +68,9 @@ export default function Home() {
     const prime = async () => {
       let mapObj = null
       if (typeof rec.latitude === 'number' && typeof rec.longitude === 'number') {
-        mapObj = await getMapByCoords(rec.latitude, rec.longitude, { zoom: 11, width: MAP_W, height: MAP_H, scale: 1 })
+        mapObj = await getMapByCoords(rec.latitude, rec.longitude, { zoom: MAP_ZOOM, width: MAP_W, height: MAP_H, scale: 1 })
       } else if (rec.location_name) {
-        mapObj = await getMapForLocation(rec.location_name, { zoom: 11, width: MAP_W, height: MAP_H, scale: 1 })
+        mapObj = await getMapForLocation(rec.location_name, { zoom: MAP_ZOOM, width: MAP_W, height: MAP_H, scale: 1 })
       }
 
       let vids = []
@@ -119,7 +125,7 @@ export default function Home() {
       let vids = []
       if (typeof lat === 'number' && typeof lon === 'number') {
         const scale = payload.hdMap ? 2 : 1
-        mapObj = await getMapByCoords(lat, lon, { zoom: 11, width: MAP_W, height: MAP_H, scale })
+        mapObj = await getMapByCoords(lat, lon, { zoom: MAP_ZOOM, width: MAP_W, height: MAP_H, scale })
         try {
           const y = await getYouTubeForLocation(name || payload.query || `${lat},${lon}`, {
             topic: 'travel', max_results: payload.videoCount ?? 6
@@ -164,10 +170,11 @@ export default function Home() {
       <SearchBar onSearch={doSearch} onGeolocate={useGeolocate} />
       <WeatherCard data={current} />
       <ForecastList data={forecast} coords={coords} backendBase={BACKEND} />
+
       <div className="container">
         <div className="grid-2">
-          <MapDisplay map={map} height={500} />
-          <YouTubeEmbed videos={videos} height={500} />
+          <MapDisplay map={map} height={MAP_H} />
+          <YouTubeEmbed videos={videos} height={MAP_H} />
         </div>
       </div>
     </>
