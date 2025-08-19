@@ -13,11 +13,10 @@ router = APIRouter(prefix="/weather", tags=["weather"])
 
 async def _resolve_location(payload: LocationQuery):
     """Resolve input into (lat, lon, name)."""
-    # If coords provided, use them
+    # If coords provided, use
     if payload.lat is not None and payload.lon is not None:
         return payload.lat, payload.lon, None
 
-    # Zip (optional): You can expand with OpenWeather zip endpoint or use geocoding
     if payload.zip_code:
         q = f"{payload.zip_code} {payload.country_code or ''}".strip()
         results = await geocode_text(q, limit=1)
