@@ -2,7 +2,7 @@
 
 import { create } from 'zustand'
 
-const LS_KEY = 'weather:last' // keep the key; we’ll just store in sessionStorage now
+const LS_KEY = 'weather:last'
 
 export const useLastSearchStore = create((set, get) => ({
   current: null,
@@ -13,11 +13,8 @@ export const useLastSearchStore = create((set, get) => ({
   setAll: (payload) => set(payload),
   clear: () => set({ current: null, forecast: null, map: null, videos: [] }),
 
-  // Read from sessionStorage (not localStorage). If nothing is there,
-  // the page loads empty on first open. That’s exactly what we want.
   hydrateFromLS: () => {
     try {
-      // one-time cleanup of legacy localStorage so it never autoloads again
       if (typeof localStorage !== 'undefined' && localStorage.getItem(LS_KEY)) {
         localStorage.removeItem(LS_KEY)
       }
@@ -36,12 +33,9 @@ export const useLastSearchStore = create((set, get) => ({
         videos: data.videos ?? [],
       })
     } catch {
-      // ignore parse/storage errors
     }
   },
 
-  // Save to sessionStorage so the data survives refresh and route changes,
-  // but disappears when the tab/window is closed.
   saveToLS: () => {
     const { current, forecast, map, videos } = get()
     try {
@@ -52,7 +46,6 @@ export const useLastSearchStore = create((set, get) => ({
         )
       }
     } catch {
-      // ignore quota/storage errors
     }
   },
 }))
