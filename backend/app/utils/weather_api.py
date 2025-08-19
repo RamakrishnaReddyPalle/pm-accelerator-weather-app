@@ -58,8 +58,6 @@ async def forecast_by_coords(lat: float, lon: float, units: str = "metric", days
 
     loc = data.get("city", {})
     raw_list = data.get("list", [])
-
-    # Condense to at most `days` daily summaries (pick the midday/peak timestamps if available)
     daily = []
     by_date = {}
     for item in raw_list:
@@ -70,7 +68,7 @@ async def forecast_by_coords(lat: float, lon: float, units: str = "metric", days
         by_date.setdefault(day, []).append(item)
 
     for day, buckets in list(by_date.items())[:days]:
-        # pick entry closest to 12:00:00 if available
+        # picking entry closest to 12:00:00 if available
         target = min(buckets, key=lambda x: abs(int(x["dt_txt"].split(" ")[1].split(":")[0]) - 12))
         daily.append({
             "date": day,
