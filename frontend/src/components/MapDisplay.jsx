@@ -1,19 +1,33 @@
-import { useEffect, useState } from 'react'
+// frontend/src/components/MapDisplay.jsx
+
+import { useEffect, useMemo, useState } from 'react'
 import { API_BASE } from '../api/axios'
 
 export default function MapDisplay({ map, height = 500, width = 800 }) {
   const [src, setSrc] = useState(null)
 
-  const absolutize = (url) => {
+  const absolutize = (url) => (url && !url.startsWith('http') ? `${API_BASE}${url}` : url)
+
+  const withParam = (url, key, val) => {
     if (!url) return url
-    // If backend returns a relative URL like "/maps/by-coords/image?...",
-    // prefix it with the backend origin so it works on Netlify
-    return url.startsWith('http') ? url : `${API_BASE}${url}`
+    const u = new URL(absolutize(url), window.location.origin)
+    u.searchParams.set(key, `${val}`)
+    return u.toString()
   }
 
-  useEffect(() => {
-    setSrc(map?.static_map_url ? absolutize(map.static_map_url) : null)
+  const urls = useMemo(() => {
+    if (!map?.static_map_url) return {}
+    // Force 1x for speed; keep format=png (widest support)
+    const png1x = withParam(map.static_map_url, 'scale', 1)
+    // If you want webp (slightly smaller) uncomment next line and use it as src:
+    // const webp1x = withParam(png1x, 'format', 'webp')
+    const fallback1 = map.proxy_image_url ? withParam(map.proxy_image_url, 'scale', 1) : null
+    return { png1x, fallback1 }
   }, [map])
+
+  useEffect(() => {
+    setSrc(urls.png1x || null)
+  }, [urls.png1x])
 
   if (!map?.static_map_url) {
     return (
@@ -23,40 +37,47 @@ export default function MapDisplay({ map, height = 500, width = 800 }) {
     )
   }
 
-  const { label, proxy_image_url, attribution, lat, lon } = map
+  const { label, attribution, lat, lon } = map
   const googleMapsUrl =
     (typeof lat === 'number' && typeof lon === 'number')
       ? `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`
       : (label ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(label)}` : '#')
 
-  const handleError = (e) => {
-    const fallback = absolutize(proxy_image_url)
-    if (fallback && src !== fallback) setSrc(fallback)
-    else { e.currentTarget.alt = 'Map failed to load'; e.currentTarget.style.opacity = 0.5 }
+  const onError = (e) => {
+    if (urls.fallback1 && src !== urls.fallback1) return setSrc(urls.fallback1)
+    e.currentTarget.alt = 'Map failed to load'
+    e.currentTarget.style.opacity = 0.5
   }
 
   return (
-    <div className="card section" style={{ height }}>
-      <div className="header">
+    <div className="card section" style={{ height, display: 'flex', flexDirection: 'column' }}>
+      <div className="header" style={{ flex: '0 0 auto' }}>
         <h3 style={{ margin: 0 }}>Map {label ? `– ${label}` : ''}</h3>
         {attribution && <div className="muted" style={{ fontSize: 12 }}>{attribution}</div>}
       </div>
+
       <a
         href={googleMapsUrl}
         target="_blank"
         rel="noreferrer"
         title="Open in Google Maps"
-        className="center"
-        style={{ height: height - 64 }}
+        style={{ flex: '1 1 auto', width: '100%', display: 'block' }}
       >
         <img
           src={src}
           alt={label || 'Map'}
-          width={width}
-          height={height - 64}
-          style={{ maxWidth: '100%', maxHeight: '100%', borderRadius: 12, border: '1px solid var(--border)', objectFit: 'cover' }}
-          onError={handleError}
+          onError={onError}
+          loading="lazy"
+          decoding="async"
           referrerPolicy="no-referrer"
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            borderRadius: 12,
+            border: '1px solid var(--border)',
+            display: 'block',
+          }}
         />
       </a>
     </div>
