@@ -1,6 +1,7 @@
 # backend/app/main.py
 from fastapi import FastAPI, Depends, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware  # <-- add
 from sqlalchemy.orm import Session
 from datetime import datetime
 
@@ -10,8 +11,8 @@ from .routes import weather as weather_routes
 from .routes import locations as locations_routes
 from .routes import export as export_routes
 from .routes import misc as misc_routes
-from .routes import youtube as youtube_routes          # <-- added
-from .routes import maps as maps_routes                # <-- added
+from .routes import youtube as youtube_routes
+from .routes import maps as maps_routes
 from . import schemas, crud
 from .utils.migrate_sqlite import ensure_history_columns
 
@@ -21,7 +22,7 @@ ensure_history_columns(engine)
 
 app = FastAPI(
     title="Weather App API",
-    version="3.0.0",  # <-- bumped for Phase 3
+    version="3.0.0",
     description="Phase 1: Weather & geocoding • Phase 2: History CRUD • Phase 3: YouTube & Static Maps",
 )
 
@@ -34,23 +35,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Phase 1 routers
+# gzip (speeds up JSON & images)
+app.add_middleware(GZipMiddleware, minimum_size=1024)
+
+# Routers
 app.include_router(weather_routes.router)
 app.include_router(locations_routes.router)
 app.include_router(export_routes.router)
 app.include_router(misc_routes.router)
-
-# Phase 3 routers (new)
-app.include_router(youtube_routes.router)              # <-- added
-app.include_router(maps_routes.router)                 # <-- added
+app.include_router(youtube_routes.router)
+app.include_router(maps_routes.router)
 
 @app.get("/", tags=["health"])
 def health():
     return {"status": "ok"}
 
-# -------------------------
-# Phase 2: Weather History CRUD
-# -------------------------
+# ---- Phase 2: Weather History CRUD ----
 
 @app.post("/weather/history", response_model=schemas.WeatherHistoryRead, tags=["history"])
 def add_weather_record(record: schemas.WeatherHistoryCreate, db: Session = Depends(get_db)):
