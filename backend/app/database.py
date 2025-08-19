@@ -1,5 +1,5 @@
 # backend/app/database.py
-# DB connection (SQLite + Phase 2 ready for other DBs)
+# DB connection (SQLite)
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 from contextlib import contextmanager
