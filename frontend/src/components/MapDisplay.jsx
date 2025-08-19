@@ -17,10 +17,7 @@ export default function MapDisplay({ map, height = 500, width = 800 }) {
 
   const urls = useMemo(() => {
     if (!map?.static_map_url) return {}
-    // Force 1x for speed; keep format=png (widest support)
     const png1x = withParam(map.static_map_url, 'scale', 1)
-    // If you want webp (slightly smaller) uncomment next line and use it as src:
-    // const webp1x = withParam(png1x, 'format', 'webp')
     const fallback1 = map.proxy_image_url ? withParam(map.proxy_image_url, 'scale', 1) : null
     return { png1x, fallback1 }
   }, [map])
