@@ -77,10 +77,10 @@ def _render_static_png(
     lat: float,
     lon: float,
     *,
-    zoom: int = 13,          # tighter default to reduce tile count
-    width: int = 640,        # a bit smaller than 800x500 for speed
+    zoom: int = 13,
+    width: int = 640,
     height: int = 400,
-    scale: int = 1,          # crisp enough, fast to load
+    scale: int = 1,
 ) -> bytes:
     zoom = _clamp_int(zoom, 1, 18)
     width = _clamp_int(width, 200, _MAX_DIM)
