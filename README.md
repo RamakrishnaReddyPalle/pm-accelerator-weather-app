@@ -1,6 +1,11 @@
 # <img src="frontend/public/favicon.svg" alt="Favicon" width="30"/> **PM ACCELERATOR - WEATHER APP**
 ---
 App is live at: https://pm-accelerator-weather-app-ram.netlify.app
+<p align="center">
+  <img src="assets/Screenshot 2025-08-20 003616.png" alt="Screenshot 1" width="49%">
+  <img src="assets/Screenshot 2025-08-20 003727.png" alt="Screenshot 2" width="49%">
+</p>
+
 ---
 
 ## **Problem Statement - Technical Assignment**
@@ -223,8 +228,10 @@ npm run dev
 ## **Swagger UI**
 
 * Endpoint: `/docs`
-* Example Screenshot:
-  ![Swagger UI](assets/swagger.png)
+* Swagger UI
+  <p align="center">
+  <img src="assets/Screenshot 2025-08-20 004148.png" alt="Screenshot 1" width="99%">
+  </p>
 
 
 ## **API Endpoints**
