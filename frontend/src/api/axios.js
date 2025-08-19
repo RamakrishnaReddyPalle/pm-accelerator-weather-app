@@ -8,12 +8,10 @@ export const API_BASE =
 
 const api = axios.create({
   baseURL: API_BASE,
-  timeout: 30000,
+  timeout: 40000,
 })
 
 if (typeof window !== 'undefined') {
-  // helpful in Netlify devtools
-  // eslint-disable-next-line no-console
   console.log('[axios] baseURL =', API_BASE)
 }
 
