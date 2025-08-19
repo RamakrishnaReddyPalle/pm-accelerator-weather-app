@@ -1,7 +1,7 @@
 # backend/app/main.py
 from fastapi import FastAPI, Depends, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.middleware.gzip import GZipMiddleware  # <-- add
+from fastapi.middleware.gzip import GZipMiddleware
 from sqlalchemy.orm import Session
 from datetime import datetime
 
@@ -16,7 +16,6 @@ from .routes import maps as maps_routes
 from . import schemas, crud
 from .utils.migrate_sqlite import ensure_history_columns
 
-# Create DB tables (dev convenience; in prod use migrations)
 Base.metadata.create_all(bind=engine)
 ensure_history_columns(engine)
 
@@ -35,7 +34,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# gzip (speeds up JSON & images)
+# gzip
 app.add_middleware(GZipMiddleware, minimum_size=1024)
 
 # Routers
@@ -50,7 +49,7 @@ app.include_router(maps_routes.router)
 def health():
     return {"status": "ok"}
 
-# ---- Phase 2: Weather History CRUD ----
+# ---- Weather History CRUD ----
 
 @app.post("/weather/history", response_model=schemas.WeatherHistoryRead, tags=["history"])
 def add_weather_record(record: schemas.WeatherHistoryCreate, db: Session = Depends(get_db)):
