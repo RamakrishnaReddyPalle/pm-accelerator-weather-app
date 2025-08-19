@@ -59,15 +59,25 @@ This makes the app both a **consumer-facing product** and a **developer tool**.
 ## **Code Structure**
 
 ```
-
 pm-accelerator-weather-app/
 │
 ├── backend/
 │   ├── app/
-│   │   ├── main.py          # FastAPI entry point
-│   │   ├── routes.py        # API route definitions
-│   │   ├── services/        # Weather + YouTube logic
-│   │   └── utils/           # Helper utilities
+│   │   ├── main.py               # FastAPI entry, mounts routers, CORS
+│   │   ├── routes/
+│   │   │   ├── weather.py        # Current, forecast, history CRUD APIs
+│   │   │   ├── locations.py      # Search locations
+│   │   │   ├── export.py         # Export history (CSV, JSON, XML, PDF)
+│   │   │   ├── youtube.py        # Fetch YouTube videos
+│   │   │   └── maps.py           # Static maps (coords & city)
+│   │   ├── services/
+│   │   │   ├── weather_service.py  # Wrapper around OWM API
+│   │   │   ├── youtube_service.py  # Wrapper around YouTube API
+│   │   │   └── map_service.py      # Static map generation
+│   │   ├── utils/
+│   │   │   ├── exporters.py        # CSV/JSON/XML/PDF export helpers
+│   │   │   └── db.py               # SQLite history storage
+│   │   └── __init__.py
 │   ├── requirements.txt
 │   └── ...
 │
@@ -76,22 +86,46 @@ pm-accelerator-weather-app/
 │   │   ├── favicon.svg
 │   │   └── index.html
 │   ├── src/
+│   │   ├── api/
+│   │   │   └── axios.js          # Centralized axios instance
+│   │   ├── store/
+│   │   │   └── lastSearch.js     # Zustand store for persisting last search
 │   │   ├── components/
-│   │   ├── App.jsx
-│   │   ├── main.jsx
-│   │   └── api.js
+│   │   │   ├── SearchBar.jsx     # Input for city search
+│   │   │   ├── WeatherCard.jsx   # Display current weather
+│   │   │   ├── ForecastCard.jsx  # Display forecast
+│   │   │   ├── MapView.jsx       # Static map rendering
+│   │   │   └── VideoGallery.jsx  # YouTube video embedding
+│   │   ├── App.jsx               # Main layout + routing
+│   │   ├── main.jsx              # React root
+│   │   └── index.css             # Tailwind base styles
 │   ├── package.json
 │   └── ...
 │
-├── assets/                  # Screenshots for README
+├── assets/
 │   ├── homepage.png
 │   ├── swagger.png
 │   └── search.png
 │
 └── README.md
+```
+---
 
-````
+## **Functionalities by Module**
 
+| **Script**                         | **Purpose**                                         |
+| ---------------------------------- | --------------------------------------------------- |
+| `backend/app/main.py`              | Starts FastAPI app, configures middleware + routers |
+| `backend/app/routes/weather.py`    | Current weather, forecast, CRUD for history         |
+| `backend/app/routes/locations.py`  | Search locations by name                            |
+| `backend/app/routes/export.py`     | Export search history in CSV/JSON/XML/PDF           |
+| `backend/app/routes/youtube.py`    | Fetch YouTube videos for a city                     |
+| `backend/app/routes/maps.py`       | Get static maps by city or coords                   |
+| `backend/app/utils/exporters.py`   | Handles export formatting                           |
+| `backend/app/utils/db.py`          | SQLite + ORM wrapper for search history             |
+| `frontend/src/store/lastSearch.js` | Persists last search across navigation + refresh    |
+| `frontend/src/api/axios.js`        | Central API call config using `VITE_API_BASE`       |
+| `frontend/src/components/*.jsx`    | Modular UI components (weather, maps, videos)       |
 ---
 
 ## **Setup Instructions**
@@ -192,18 +226,55 @@ npm run dev
 * Example Screenshot:
   ![Swagger UI](assets/swagger.png)
 
----
 
-## **API Routes**
+## **API Endpoints**
 
-| Route      | Method | Purpose                                                   |
-| ---------- | ------ | --------------------------------------------------------- |
-| `/`        | GET    | Health check                                              |
-| `/weather` | GET    | Fetch weather data for a city (lat/lon, temp, conditions) |
-| `/map`     | GET    | Fetch weather map tile for given lat/lon                  |
-| `/youtube` | GET    | Fetch YouTube videos related to city & weather            |
-| `/history` | GET    | Retrieve search history                                   |
-| `/history` | POST   | Add a city search to history                              |
+### **Weather**
+
+| Method | Endpoint                  | Purpose         |
+| ------ | ------------------------- | --------------- |
+| POST   | `/weather/current`        | Current weather |
+| POST   | `/weather/forecast`       | Forecast        |
+| POST   | `/weather/history`        | Add record      |
+| GET    | `/weather/history`        | Get history     |
+| GET    | `/weather/history/search` | Search history  |
+| PUT    | `/weather/history/{id}`   | Update record   |
+| DELETE | `/weather/history/{id}`   | Delete record   |
+
+### **Locations**
+
+| Method | Endpoint            | Purpose               |
+| ------ | ------------------- | --------------------- |
+| POST   | `/locations/search` | Search city locations |
+
+### **Export**
+
+| Method | Endpoint       | Purpose     |
+| ------ | -------------- | ----------- |
+| GET    | `/export/csv`  | Export CSV  |
+| GET    | `/export/json` | Export JSON |
+| GET    | `/export/xml`  | Export XML  |
+| GET    | `/export/pdf`  | Export PDF  |
+
+### **Maps**
+
+| Method | Endpoint                | Purpose                   |
+| ------ | ----------------------- | ------------------------- |
+| GET    | `/maps/by-coords`       | Static map by coordinates |
+| GET    | `/maps/by-coords/image` | Static map image          |
+| GET    | `/maps/{location}`      | Static map by city        |
+
+### **YouTube**
+
+| Method | Endpoint              | Purpose                     |
+| ------ | --------------------- | --------------------------- |
+| GET    | `/youtube/{location}` | YouTube videos for location |
+
+### **Health**
+
+| Method | Endpoint | Purpose          |
+| ------ | -------- | ---------------- |
+| GET    | `/`      | API Health check |
 
 ---
 
@@ -240,4 +311,3 @@ npm run dev
 * [Render Docs](https://render.com/docs)
 * [YouTube Data API](https://developers.google.com/youtube/v3)
 * [OpenWeatherMap API](https://openweathermap.org/api)
-
