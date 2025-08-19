@@ -1,16 +1,19 @@
+// frontend/src/components/YouTubeEmbed.jsx
+
 export default function YouTubeEmbed({ videos = [], height = 500 }) {
   if (!videos?.length) return null
 
-  const headerH = 44 // px, approximate header height
+  const headerH = 44 // px
 
   return (
-    <div className="card" style={{ height, display: 'flex', flexDirection: 'column' }}>
-      <div className="header" style={{ minHeight: headerH }}>
+    <div className="card section" style={{ height, display: 'flex', flexDirection: 'column' }}>
+      <div className="header" style={{ flex: '0 0 auto', minHeight: headerH, display: 'flex', alignItems: 'center' }}>
         <h3 style={{ margin: 0 }}>YouTube</h3>
       </div>
+
       <div
         style={{
-          flex: 1,
+          flex: '1 1 auto',
           overflow: 'auto',
           paddingRight: 4,
         }}
@@ -53,6 +56,7 @@ export default function YouTubeEmbed({ videos = [], height = 500 }) {
                       objectFit: 'cover',
                       borderRadius: 8,
                       marginBottom: 8,
+                      display: 'block',
                     }}
                     loading="lazy"
                     referrerPolicy="no-referrer"
