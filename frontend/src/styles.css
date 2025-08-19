@@ -1,3 +1,5 @@
+/* frontend/src/styles.css */
+
 :root {
   --bg: #0b0d10;
   --panel: #12161b;
@@ -134,3 +136,102 @@ a { color: inherit; text-decoration: none; }
 .mono { font-variant-numeric: tabular-nums; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
 .muted { color: var(--muted); }
 .center { display:flex; align-items:center; justify-content:center; }
+
+/* ──────────────────────────────────────────────
+   SearchBar responsive layout
+   ────────────────────────────────────────────── */
+.searchbar__row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Desktop actions hidden by default; visible ≥900px */
+.searchbar__actions--desktop {
+  display: none;
+  gap: 12px;
+}
+@media (min-width: 900px) {
+  .searchbar__actions--desktop { display: flex; }
+}
+
+/* Mobile actions visible by default; hidden ≥900px */
+.searchbar__actions--mobile {
+  display: flex;
+  gap: 8px;
+}
+@media (min-width: 900px) {
+  .searchbar__actions--mobile { display: none; }
+}
+
+/* Advanced panel (mobile only) is hidden by default */
+.searchbar__advanced {
+  display: none;
+  margin-top: 12px;
+  gap: 12px;
+}
+.searchbar__advanced.open {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.searchbar__group { display: flex; flex-direction: column; gap: 6px; }
+
+/* Never show the advanced panel on desktop even if it has 'open' */
+@media (min-width: 900px) {
+  .searchbar__advanced,
+  .searchbar__advanced.open {
+    display: none !important;
+  }
+}
+
+/* Suggestion list z-layer helper */
+.searchbar__input { position: relative; }
+.searchbar__suggest { z-index: 10; }
+
+/* ──────────────────────────────────────────────
+   Top navigation: hamburger-ready styles
+   (works with your TopNav.jsx)
+   ────────────────────────────────────────────── */
+.hamburger {
+  display: none;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 6px 10px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+@media (max-width: 900px) {
+  .nav-inner { gap: 10px; }
+
+  /* Hide full link row on mobile; show when nav is opened */
+  .nav-links {
+    display: none;
+    position: absolute;
+    left: 0; right: 0;
+    top: 100%;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 12px 12px;
+    gap: 8px;
+    flex-direction: column;
+  }
+  .nav.nav--open .nav-links { display: flex; }
+
+  .hamburger { display: inline-flex; align-items: center; }
+  .toggle { padding: 6px 8px; }
+  .brand { font-size: 15px; }
+}
+
+/* Ensure card columns align nicely at all sizes */
+.grid-2 > .card { height: 100%; }
+
+/* Make media (map, thumbnails) conform to their card area */
+.card img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
