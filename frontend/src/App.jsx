@@ -8,7 +8,6 @@ import History from './pages/History.jsx'
 import Admin from './pages/Admin.jsx'
 
 export default function App() {
-  // optional global theme handling (safe if TopNav ignores props)
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light')
   useEffect(() => {
     document.documentElement.dataset.theme = theme
@@ -18,7 +17,7 @@ export default function App() {
 
   return (
     <>
-      {/* If your TopNav supports these props, great; otherwise it’ll just ignore them */}
+      {}
       <TopNav theme={theme} onToggleTheme={toggleTheme} />
       <Routes>
         <Route path="/" element={<Home />} />
