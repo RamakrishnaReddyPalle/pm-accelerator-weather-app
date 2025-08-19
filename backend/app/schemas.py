@@ -3,10 +3,6 @@ from datetime import date, datetime
 from typing import Optional, List, Any, Literal
 from pydantic import BaseModel, Field, field_validator, ConfigDict
 
-# ---------------------------
-# Existing Phase 1 definitions
-# ---------------------------
-
 Units = Literal["standard", "metric", "imperial"]
 
 class LocationQuery(BaseModel):
@@ -73,10 +69,7 @@ class GeocodeCandidate(BaseModel):
 class GeocodeResponse(BaseModel):
     candidates: List[GeocodeCandidate]
 
-
-# ---------------------------
-# Phase 2: CRUD Weather History
-# ---------------------------
+# CRUD Weather History
 
 class WeatherHistoryBase(BaseModel):
     location_name: str = Field(..., min_length=2, max_length=100)
@@ -84,7 +77,7 @@ class WeatherHistoryBase(BaseModel):
     longitude: Optional[float] = None
     start_date: Optional[date] = None
     end_date: Optional[date] = None
-    weather_data: Optional[Any] = None  # Will hold JSON from OpenWeather API
+    weather_data: Optional[Any] = None
 
     @field_validator("latitude", "longitude")
     @classmethod
@@ -119,7 +112,7 @@ class WeatherHistoryRead(WeatherHistoryBase):
     humidity: Optional[float] = None
     recorded_at: Optional[datetime] = None
 
-    model_config = ConfigDict(from_attributes=True)  # replaces orm_mode=True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class WeatherHistoryUpdate(BaseModel):
