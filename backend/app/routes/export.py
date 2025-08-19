@@ -44,7 +44,6 @@ def _common_fetch(
         skip=skip,
     )
     if not rows:
-        # Return empty file but 200; or choose 204. We'll return tiny file so UX isn't confusing.
         pass
     return rows
 
