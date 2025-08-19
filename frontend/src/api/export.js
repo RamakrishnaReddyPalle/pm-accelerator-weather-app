@@ -1,6 +1,5 @@
 import api from './axios'
 
-// helpers for download
 const downloadBlob = (blob, filename) => {
   const url = window.URL.createObjectURL(blob)
   const a = document.createElement('a')
