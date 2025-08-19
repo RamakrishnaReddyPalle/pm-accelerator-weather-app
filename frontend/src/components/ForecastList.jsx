@@ -1,3 +1,5 @@
+// frontend/src/components/ForecastList.jsx
+
 export default function ForecastList({ data }) {
   const name = data?.location?.name || '—'
   const list = data?.forecast || []
