@@ -1,5 +1,4 @@
 // frontend/src/pages/Home.jsx
-
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import SearchBar from '../components/SearchBar.jsx'
