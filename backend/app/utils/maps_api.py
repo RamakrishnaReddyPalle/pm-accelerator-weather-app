@@ -52,7 +52,7 @@ async def map_image_for_location(
         "label": label,
         "lat": lat,
         "lon": lon,
-        # Point directly to our backend renderer so <img> loads reliably
+        # Pointing directly to backend renderer so <img> loads reliably
         "static_map_url": url,
         "proxy_image_url": url,
         "attribution": "© OpenStreetMap contributors",
